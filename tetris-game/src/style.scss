@@ -28,11 +28,15 @@ body {
       box-sizing: border-box;
       border: 0.5px solid #a7a5a5; // Optional: just to show cells
     }
-    .wall {
-      background-color: salmon;
-    }
+
     .playable {
       background-color: green;
+    }
+    .filled {
+      background-color: red;
+    }
+    .active {
+      background-color: rgb(96, 218, 112);
     }
   }
 }
