@@ -86,3 +86,17 @@ function hasCollision(piece: typeof currentPiece, matrix: number[][]): boolean {
   }
   return false; //no collision
 }
+
+//lockPiece permanently adds the current falling piece to the playfield
+function lockPiece(piece: typeof currentPiece, matrix: number[][]) {
+  const { shape, x, y } = piece;
+  //looping through every cell in the shape matrix
+  for (let row = 0; row < shape.length; row++) {
+    for (let col = 0; col < shape[row].length; col++) {
+      //checking if this part of the shape is filled or simply (1)
+      if (shape[row][col]) {
+        matrix[y + row][x + col] = shape[row][col]; //taking the filled cell of the shape, copy it to the palyfield
+      }
+    }
+  }
+}
