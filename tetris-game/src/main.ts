@@ -93,7 +93,7 @@ function lockPiece(piece: typeof currentPiece, matrix: number[][]) {
   //looping through every cell in the shape matrix
   for (let row = 0; row < shape.length; row++) {
     for (let col = 0; col < shape[row].length; col++) {
-      //checking if this part of the shape is filled or simply (1)
+      //checking if this part of the shape is filled with value of 1
       if (shape[row][col]) {
         matrix[y + row][x + col] = shape[row][col]; //taking the filled cell of the shape, copy it to the palyfield
       }
@@ -129,4 +129,23 @@ function render() {
     }
   }
 }
+function update() {
+  currentPiece.y++; //falling down effect
+  //Did the shape hit the bottom or another locked-in piece on the playfield after falling?
+  if (hasCollision(currentPiece, playfield)) {
+    currentPiece.y--; //undo the move
+    lockPiece(currentPiece, playfield); //copy the corresponding positions in the playfield matrix
+    //clearLines(playfield); //next step
+    currentPiece = generateNewPiece(); //after locking the old piece, it generates a new random piece to fall next
+
+    //again, check if the new generated piece immediately colides if yes, the game ends
+    if (hasCollision(currentPiece, playfield)) {
+      alert("Game Over!");
+      //location.reload();
+    }
+  }
+  render();
+}
+
+setInterval(update, 100);
 render();
