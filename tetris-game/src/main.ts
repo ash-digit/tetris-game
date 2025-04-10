@@ -2,21 +2,21 @@ import "./style.scss";
 const ROWS = 20;
 const COLS = 10;
 
-const createPlayfield = function () {
-  const playfield = document.querySelector(".playfield");
-  playfield!.innerHTML = "";
-  for (let row = 0; row < ROWS; row++) {
-    for (let col = 0; col < COLS; col++) {
-      const cell = document.createElement("div");
-      cell.classList.add("cell");
-      cell.classList.add("playable");
+// const createPlayfield = function () {
+//   const playfield = document.querySelector(".playfield");
+//   playfield!.innerHTML = "";
+//   for (let row = 0; row < ROWS; row++) {
+//     for (let col = 0; col < COLS; col++) {
+//       const cell = document.createElement("div");
+//       cell.classList.add("cell");
+//       cell.classList.add("playable");
 
-      playfield?.appendChild(cell);
-    }
-  }
-};
+//       playfield?.appendChild(cell);
+//     }
+//   }
+// };
 
-setInterval(createPlayfield, 500);
+// setInterval(createPlayfield, 500);
 
 //----------------
 
@@ -65,7 +65,7 @@ function generateNewPiece() {
     y: 0,
   };
 }
-
+//hasCollision can check if a tetris shape would bump into (walls, floor or other locked pieaces)
 function hasCollision(piece: typeof currentPiece, matrix: number[][]): boolean {
   const { shape, x, y } = piece;
   for (let row = 0; row < shape.length; row++) {
@@ -100,3 +100,33 @@ function lockPiece(piece: typeof currentPiece, matrix: number[][]) {
     }
   }
 }
+
+function render() {
+  playfieldDiv.innerHTML = ""; //wiping the screen clean
+  //loop through every row and column of the playfield grid (row by row)
+  for (let row = 0; row < ROWS; row++) {
+    // 0 to 19(19 included)
+    for (let col = 0; col < COLS; col++) {
+      // 0 to 9(9 included)
+      const cell = document.createElement("div");
+      cell.className = "cell";
+      if (playfield[row][col]) cell.classList.add("filled");
+
+      const inPiece =
+        row >= currentPiece.y && //the current row is bellow or equal to the top of the piece
+        row < currentPiece.y + currentPiece.shape.length && //the current row is above the bottom of the piece
+        col >= currentPiece.x && //the current column is to the right or at the left edge of the piece
+        col < currentPiece.x + currentPiece.shape[0].length; //the current column is to the left of the right edge of the piece
+
+      if (
+        inPiece &&
+        currentPiece.shape[row - currentPiece.y]?.[col - currentPiece.x] //is this part of the shape filled?
+      ) {
+        cell.classList.add("active");
+      }
+
+      playfieldDiv.appendChild(cell);
+    }
+  }
+}
+render();
