@@ -2,24 +2,6 @@ import "./style.scss";
 const ROWS = 20;
 const COLS = 10;
 
-// const createPlayfield = function () {
-//   const playfield = document.querySelector(".playfield");
-//   playfield!.innerHTML = "";
-//   for (let row = 0; row < ROWS; row++) {
-//     for (let col = 0; col < COLS; col++) {
-//       const cell = document.createElement("div");
-//       cell.classList.add("cell");
-//       cell.classList.add("playable");
-
-//       playfield?.appendChild(cell);
-//     }
-//   }
-// };
-
-// setInterval(createPlayfield, 500);
-
-//----------------
-
 const playfield: number[][] = Array.from({ length: ROWS }, () =>
   Array(COLS).fill(0)
 );
@@ -135,10 +117,10 @@ function update() {
   if (hasCollision(currentPiece, playfield)) {
     currentPiece.y--; //undo the move
     lockPiece(currentPiece, playfield); //copy the corresponding positions in the playfield matrix
-    //clearLines(playfield); //next step
+    //clearLines(playfield); //next step after the rotatePiece function
     currentPiece = generateNewPiece(); //after locking the old piece, it generates a new random piece to fall next
 
-    //again, check if the new generated piece immediately colides if yes, the game ends
+    //again, check if the newly generated piece immediately colides, if yes ====> the game ends
     if (hasCollision(currentPiece, playfield)) {
       alert("Game Over!");
       //location.reload();
@@ -146,6 +128,22 @@ function update() {
   }
   render();
 }
+//listening to the a, s, d, and w keydown events to move the currentPiece around
+document.addEventListener("keydown", (e) => {
+  if (e.key === "a") {
+    currentPiece.x--;
+    if (hasCollision(currentPiece, playfield)) currentPiece.x++;
+  } else if (e.key === "d") {
+    currentPiece.x++;
+    if (hasCollision(currentPiece, playfield)) currentPiece.x--;
+  } else if (e.key === "s") {
+    currentPiece.y++;
+    if (hasCollision(currentPiece, playfield)) currentPiece.y--;
+  } else if (e.key === "w") {
+    //rotatePiece();the next praiority is working on rotatePeice function
+  }
+  render(); //after handling the movement, we re-render the  playfieldDiv
+});
 
-setInterval(update, 100);
+setInterval(update, 1000);
 render();
