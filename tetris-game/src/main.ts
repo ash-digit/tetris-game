@@ -19,19 +19,19 @@ const SHAPES = [
   [
     [1, 1, 0],
     [0, 1, 1],
-  ], // S
+  ], // Z
   [
     [0, 1, 1],
     [1, 1, 0],
-  ], // Z
+  ], // S
   [
     [1, 1, 1],
     [1, 0, 0],
-  ], // J
+  ], // L
   [
     [1, 1, 1],
     [0, 0, 1],
-  ], // L
+  ], // J
 ];
 
 let currentPiece = generateNewPiece();
@@ -111,6 +111,31 @@ function render() {
     }
   }
 }
+//rotates a piece by 90 degrees clockwise
+function rotatePiece() {
+  const shape = currentPiece.shape;
+  const rows = shape.length;
+  const cols = shape[0].length;
+
+  const rotated: number[][] = [];
+
+  for (let col = 0; col < cols; col++) {
+    const newRow: number[] = [];
+    for (let row = rows - 1; row >= 0; row--) {
+      newRow.push(shape[row][col]);
+    }
+    rotated.push(newRow);
+  }
+  // Keep a copy of the original shape in case the rotation causes a collision
+  const originalShape = currentPiece.shape;
+  currentPiece.shape = rotated;
+
+  if (hasCollision(currentPiece, playfield)) {
+    // Revert back if the rotated piece would collide
+    currentPiece.shape = originalShape;
+  }
+}
+
 function update() {
   currentPiece.y++; //falling down effect
   //Did the shape hit the bottom or another locked-in piece on the playfield after falling?
@@ -140,7 +165,7 @@ document.addEventListener("keydown", (e) => {
     currentPiece.y++;
     if (hasCollision(currentPiece, playfield)) currentPiece.y--;
   } else if (e.key === "w") {
-    //rotatePiece();the next praiority is working on rotatePeice function
+    rotatePiece();
   }
   render(); //after handling the movement, we re-render the  playfieldDiv
 });
