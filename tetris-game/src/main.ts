@@ -1,6 +1,9 @@
 import "./style.scss";
 const ROWS = 20;
 const COLS = 10;
+let time = 1000;
+let score: number = 0;
+let isPaused: boolean = false;
 
 const playfield: number[][] = Array.from({ length: ROWS }, () =>
   Array(COLS).fill(0)
@@ -37,6 +40,16 @@ const SHAPES = [
 let currentPiece = generateNewPiece();
 
 const playfieldDiv = document.querySelector(".playfield")!;
+const reset = document.getElementById("reset");
+reset?.addEventListener("click", () => {
+  if (isPaused) {
+    isPaused = false;
+    reset.innerHTML = "Pause";
+  } else {
+    isPaused = true;
+    reset.innerHTML = "Continue";
+  }
+});
 
 function generateNewPiece() {
   const randomIndex = Math.floor(Math.random() * SHAPES.length);
@@ -88,9 +101,11 @@ function clearLines(matrix: number[][]) {
     if (matrix[row].every((cell) => cell !== 0)) {
       matrix.splice(row, 1); //removeing the row filled with 1s
       matrix.unshift(Array(COLS).fill(0)); //adding a new array filld with 0s to the beginning of playfield
+      score += 100;
       row++; // recheck current row
     }
   }
+  console.log(score);
 }
 function render() {
   playfieldDiv.innerHTML = ""; //wiping the screen clean
@@ -146,38 +161,42 @@ function rotatePiece() {
 }
 
 function update() {
-  currentPiece.y++; //falling down effect
-  //Did the shape hit the bottom or another locked-in piece on the playfield after falling?
-  if (hasCollision(currentPiece, playfield)) {
-    currentPiece.y--; //undo the move
-    lockPiece(currentPiece, playfield); //copy the corresponding positions in the playfield matrix
-    clearLines(playfield);
-    currentPiece = generateNewPiece(); //after locking the old piece, it generates a new random piece to fall next
-
-    //again, check if the newly generated piece immediately colides, if yes ====> the game ends
+  if (isPaused) {
+    return;
+  } else {
+    currentPiece.y++; //falling down effect
+    //Did the shape hit the bottom or another locked-in piece on the playfield after falling?
     if (hasCollision(currentPiece, playfield)) {
-      alert("Game Over!");
-      //location.reload();
+      currentPiece.y--; //undo the move
+      lockPiece(currentPiece, playfield); //copy the corresponding positions in the playfield matrix
+      clearLines(playfield);
+      currentPiece = generateNewPiece(); //after locking the old piece, it generates a new random piece to fall next
+
+      //again, check if the newly generated piece immediately colides, if yes ====> the game ends
+      if (hasCollision(currentPiece, playfield)) {
+        alert("Game Over!");
+        //location.reload();
+      }
     }
+    render();
   }
-  render();
 }
 //listening to the a, s, d, and w keydown events to move the currentPiece around
 document.addEventListener("keydown", (e) => {
-  if (e.key === "a") {
+  if (e.key === "a" && !isPaused) {
     currentPiece.x--;
     if (hasCollision(currentPiece, playfield)) currentPiece.x++;
-  } else if (e.key === "d") {
+  } else if (e.key === "d" && !isPaused) {
     currentPiece.x++;
     if (hasCollision(currentPiece, playfield)) currentPiece.x--;
-  } else if (e.key === "s") {
+  } else if (e.key === "s" && !isPaused) {
     currentPiece.y++;
     if (hasCollision(currentPiece, playfield)) currentPiece.y--;
-  } else if (e.key === "w") {
+  } else if (e.key === "w" && !isPaused) {
     rotatePiece();
   }
   render(); //after handling the movement, we re-render the  playfieldDiv
 });
 
-setInterval(update, 1000);
+setInterval(update, time);
 render();
