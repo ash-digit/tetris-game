@@ -82,7 +82,16 @@ function lockPiece(piece: typeof currentPiece, matrix: number[][]) {
     }
   }
 }
-
+//clearLines scans the rows from bottom to top so rows can shift after being cleared
+function clearLines(matrix: number[][]) {
+  for (let row = ROWS - 1; row >= 0; row--) {
+    if (matrix[row].every((cell) => cell !== 0)) {
+      matrix.splice(row, 1); //removeing the row filled with 1s
+      matrix.unshift(Array(COLS).fill(0)); //adding a new array filld with 0s to the beginning of playfield
+      row++; // recheck current row
+    }
+  }
+}
 function render() {
   playfieldDiv.innerHTML = ""; //wiping the screen clean
   //loop through every row and column of the playfield grid (row by row)
@@ -142,7 +151,7 @@ function update() {
   if (hasCollision(currentPiece, playfield)) {
     currentPiece.y--; //undo the move
     lockPiece(currentPiece, playfield); //copy the corresponding positions in the playfield matrix
-    //clearLines(playfield); //next step after the rotatePiece function
+    clearLines(playfield);
     currentPiece = generateNewPiece(); //after locking the old piece, it generates a new random piece to fall next
 
     //again, check if the newly generated piece immediately colides, if yes ====> the game ends

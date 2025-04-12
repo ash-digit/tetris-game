@@ -26,17 +26,14 @@ body {
       width: 100%;
       height: 100%;
       box-sizing: border-box;
-      border: 0.5px solid #d7e724; // Optional: just to show cells
+      // border: 0.5px solid #ffffff; // Optional: just to show cells
     }
 
-    .playable {
-      background-color: green;
-    }
     .filled {
-      background-color: red;
+      background-color: rgb(255, 255, 255);
     }
     .active {
-      background-color: rgb(30, 84, 245);
+      background-color: rgb(0, 0, 0);
     }
   }
 }
