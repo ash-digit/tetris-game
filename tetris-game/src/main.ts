@@ -36,12 +36,16 @@ const SHAPES = [
     [0, 0, 1],
   ], // J
 ];
-let reset = document.getElementById("reset");
-reset?.addEventListener("click", () => {
-  console.log("clicked");
-  restartGame();
-});
-let currentPiece = generateNewPiece();
+
+const upcomingPieces: number[][][] = [];
+
+function fillUpcomingPieces() {
+  while (upcomingPieces.length < 3) {
+    const randomIndex = Math.floor(Math.random() * SHAPES.length);
+    const shape = SHAPES[randomIndex];
+    upcomingPieces.push(shape);
+  }
+}
 
 const playfieldDiv = document.querySelector(".playfield")!;
 const pauseAndContinue = document.getElementById("pause-continue");
@@ -54,6 +58,13 @@ pauseAndContinue?.addEventListener("click", () => {
     pauseAndContinue.innerHTML = "Continue";
   }
 });
+let reset = document.getElementById("reset");
+reset?.addEventListener("click", () => {
+  console.log("clicked");
+  pauseAndContinue!.innerHTML = "Pause";
+  restartGame();
+});
+let currentPiece = generateNewPiece();
 
 function restartGame() {
   playfield = createEmptyPlayfield();
@@ -64,21 +75,23 @@ function restartGame() {
 }
 
 function generateNewPiece() {
-  const randomIndex = Math.floor(Math.random() * SHAPES.length);
-  const shape = SHAPES[randomIndex];
+  fillUpcomingPieces();
+  const shape = upcomingPieces.shift();
+  fillUpcomingPieces();
+  console.log(upcomingPieces);
   return {
     shape,
-    x: Math.floor((COLS - shape[0].length) / 2),
+    x: Math.floor((COLS - shape![0].length) / 2),
     y: 0,
   };
 }
 //hasCollision can check if a tetris shape would bump into (walls, floor or other locked pieaces)
 function hasCollision(piece: typeof currentPiece, matrix: number[][]): boolean {
   const { shape, x, y } = piece;
-  for (let row = 0; row < shape.length; row++) {
+  for (let row = 0; row < shape!.length; row++) {
     // shape is a 2D array so we need a nested loop
-    for (let col = 0; col < shape[row].length; col++) {
-      if (shape[row][col] === 0) continue;
+    for (let col = 0; col < shape![row].length; col++) {
+      if (shape![row][col] === 0) continue;
       const newY = y + row; //position of the little square on Y axis
       const newX = x + col; // position of the little square on X axis
       if (
@@ -98,11 +111,11 @@ function hasCollision(piece: typeof currentPiece, matrix: number[][]): boolean {
 function lockPiece(piece: typeof currentPiece, matrix: number[][]) {
   const { shape, x, y } = piece;
   //looping through every cell in the shape matrix
-  for (let row = 0; row < shape.length; row++) {
-    for (let col = 0; col < shape[row].length; col++) {
+  for (let row = 0; row < shape!.length; row++) {
+    for (let col = 0; col < shape![row].length; col++) {
       //checking if this part of the shape is filled with value of 1
       if (shape[row][col]) {
-        matrix[y + row][x + col] = shape[row][col]; //taking the filled cell of the shape, copy it to the palyfield
+        matrix[y + row][x + col] = shape![row][col]; //taking the filled cell of the shape, copy it to the palyfield
       }
     }
   }
@@ -132,13 +145,13 @@ function render() {
 
       const inPiece =
         row >= currentPiece.y && //the current row is bellow or equal to the top of the piece
-        row < currentPiece.y + currentPiece.shape.length && //the current row is above the bottom of the piece
+        row < currentPiece.y + currentPiece.shape!.length && //the current row is above the bottom of the piece
         col >= currentPiece.x && //the current column is to the right or at the left edge of the piece
-        col < currentPiece.x + currentPiece.shape[0].length; //the current column is to the left of the right edge of the piece
+        col < currentPiece.x + currentPiece.shape![0].length; //the current column is to the left of the right edge of the piece
 
       if (
         inPiece &&
-        currentPiece.shape[row - currentPiece.y]?.[col - currentPiece.x] //is this part of the shape filled?
+        currentPiece.shape![row - currentPiece.y]?.[col - currentPiece.x] //is this part of the shape filled?
       ) {
         cell.classList.add("active");
       }
@@ -150,15 +163,15 @@ function render() {
 //rotates a piece by 90 degrees clockwise
 function rotatePiece() {
   const shape = currentPiece.shape;
-  const rows = shape.length;
-  const cols = shape[0].length;
+  const rows = shape!.length;
+  const cols = shape![0].length;
 
   const rotated: number[][] = [];
 
   for (let col = 0; col < cols; col++) {
     const newRow: number[] = [];
     for (let row = rows - 1; row >= 0; row--) {
-      newRow.push(shape[row][col]);
+      newRow.push(shape![row][col]);
     }
     rotated.push(newRow);
   }
