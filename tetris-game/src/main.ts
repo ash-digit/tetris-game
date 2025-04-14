@@ -4,10 +4,10 @@ const COLS = 10;
 let time = 1000;
 let score: number = 0;
 let isPaused: boolean = false;
-
-const playfield: number[][] = Array.from({ length: ROWS }, () =>
-  Array(COLS).fill(0)
-);
+function createEmptyPlayfield() {
+  return Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+}
+let playfield = createEmptyPlayfield();
 
 const SHAPES = [
   [[1, 1, 1, 1]], // I
@@ -36,20 +36,32 @@ const SHAPES = [
     [0, 0, 1],
   ], // J
 ];
-
+let reset = document.getElementById("reset");
+reset?.addEventListener("click", () => {
+  console.log("clicked");
+  restartGame();
+});
 let currentPiece = generateNewPiece();
 
 const playfieldDiv = document.querySelector(".playfield")!;
-const reset = document.getElementById("reset");
-reset?.addEventListener("click", () => {
+const pauseAndContinue = document.getElementById("pause-continue");
+pauseAndContinue?.addEventListener("click", () => {
   if (isPaused) {
     isPaused = false;
-    reset.innerHTML = "Pause";
+    pauseAndContinue.innerHTML = "Pause";
   } else {
     isPaused = true;
-    reset.innerHTML = "Continue";
+    pauseAndContinue.innerHTML = "Continue";
   }
 });
+
+function restartGame() {
+  playfield = createEmptyPlayfield();
+  currentPiece = generateNewPiece();
+  isPaused = false;
+  score = 0;
+  render();
+}
 
 function generateNewPiece() {
   const randomIndex = Math.floor(Math.random() * SHAPES.length);
