@@ -48,6 +48,32 @@ function fillUpcomingPieces() {
 }
 
 const playfieldDiv = document.querySelector(".playfield")!;
+
+//renderNextPieces will run in generateNewPiece right after fillUpcomingPieces function call
+//so we can see the next 3 pieces in the DOM
+function renderNextPieces() {
+  const container = document.getElementById("nextPieces");
+  if (!container) return;
+  container.innerHTML = ""; // clear old previews
+  upcomingPieces.forEach((shape) => {
+    //looping through shapes in the upcommingPieces arr
+    const preview = document.createElement("div");
+    preview.className = "preview-piece";
+    const width = shape[0].length;
+    console.log(shape);
+    preview.style.gridTemplateColumns = `repeat(${width}, 16px)`;
+    shape.forEach((row) => {
+      row.forEach((cell) => {
+        const cellDiv = document.createElement("div");
+        cellDiv.className = "cell";
+        if (cell) cellDiv.classList.add("filled"); //if cell has the value of 1 the class filled would be added
+        preview.appendChild(cellDiv);
+      });
+    });
+
+    container.appendChild(preview);
+  });
+}
 const pauseAndContinue = document.getElementById("pause-continue");
 pauseAndContinue?.addEventListener("click", () => {
   if (isPaused) {
@@ -58,12 +84,14 @@ pauseAndContinue?.addEventListener("click", () => {
     pauseAndContinue.innerHTML = "Continue";
   }
 });
+
 let reset = document.getElementById("reset");
 reset?.addEventListener("click", () => {
   console.log("clicked");
   pauseAndContinue!.innerHTML = "Pause";
   restartGame();
 });
+
 let currentPiece = generateNewPiece();
 
 function restartGame() {
@@ -78,7 +106,7 @@ function generateNewPiece() {
   fillUpcomingPieces();
   const shape = upcomingPieces.shift();
   fillUpcomingPieces();
-  console.log(upcomingPieces);
+  renderNextPieces();
   return {
     shape,
     x: Math.floor((COLS - shape![0].length) / 2),
@@ -114,7 +142,7 @@ function lockPiece(piece: typeof currentPiece, matrix: number[][]) {
   for (let row = 0; row < shape!.length; row++) {
     for (let col = 0; col < shape![row].length; col++) {
       //checking if this part of the shape is filled with value of 1
-      if (shape[row][col]) {
+      if (shape![row][col]) {
         matrix[y + row][x + col] = shape![row][col]; //taking the filled cell of the shape, copy it to the palyfield
       }
     }
