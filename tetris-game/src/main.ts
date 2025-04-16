@@ -61,7 +61,7 @@ function renderNextPieces() {
     preview.className = "preview-piece";
     const width = shape[0].length;
     console.log(shape);
-    preview.style.gridTemplateColumns = `repeat(${width}, 16px)`;
+    preview.style.gridTemplateColumns = `repeat(${width}, 32px)`;
     shape.forEach((row) => {
       row.forEach((cell) => {
         const cellDiv = document.createElement("div");
@@ -78,17 +78,17 @@ const pauseAndContinue = document.getElementById("pause-continue");
 pauseAndContinue?.addEventListener("click", () => {
   if (isPaused) {
     isPaused = false;
-    pauseAndContinue.innerHTML = "Pause";
+    pauseAndContinue.innerHTML = "PAUSE";
   } else {
     isPaused = true;
-    pauseAndContinue.innerHTML = "Continue";
+    pauseAndContinue.innerHTML = "CONTINUE";
   }
 });
 
 let reset = document.getElementById("reset");
 reset?.addEventListener("click", () => {
   console.log("clicked");
-  pauseAndContinue!.innerHTML = "Pause";
+  pauseAndContinue!.innerHTML = "PAUSE";
   restartGame();
 });
 
@@ -99,6 +99,8 @@ function restartGame() {
   currentPiece = generateNewPiece();
   isPaused = false;
   score = 0;
+  updateScore(score);
+
   render();
 }
 
@@ -134,7 +136,12 @@ function hasCollision(piece: typeof currentPiece, matrix: number[][]): boolean {
   }
   return false; //no collision
 }
+function updateScore(score: number) {
+  let scoreCounter = document.querySelector("#counter");
+  if (!scoreCounter) return;
 
+  scoreCounter.innerHTML = score.toString();
+}
 //lockPiece permanently adds the current falling piece to the playfield
 function lockPiece(piece: typeof currentPiece, matrix: number[][]) {
   const { shape, x, y } = piece;
@@ -155,6 +162,7 @@ function clearLines(matrix: number[][]) {
       matrix.splice(row, 1); //removeing the row filled with 1s
       matrix.unshift(Array(COLS).fill(0)); //adding a new array filld with 0s to the beginning of playfield
       score += 100;
+      updateScore(score);
       row++; // recheck current row
     }
   }
