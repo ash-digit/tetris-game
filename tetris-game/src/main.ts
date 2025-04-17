@@ -1,7 +1,7 @@
 import "./style.scss";
 const ROWS = 20;
 const COLS = 10;
-let time = 1000;
+let time = 950;
 let score: number = 0;
 let isPaused: boolean = false;
 function createEmptyPlayfield() {

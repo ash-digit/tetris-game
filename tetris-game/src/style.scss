@@ -4,14 +4,16 @@
   src: url("Digital7-rg1mL.ttf") format("truetype");
   src: url("Digital7Mono-Yz9J4.ttf") format("truetype");
 }
-// Digital7Mono-Yz9J4.ttf
+$retro-white: #efeee8;
+$retro-black: #06160f;
+$retro-gray: #535b4e;
 :root {
   box-sizing: border-box;
 }
 body {
   font-family: "digital";
   box-sizing: border-box;
-  background-color: #000000;
+  background-color: $retro-black;
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -22,15 +24,15 @@ body {
     grid-template-columns: repeat(2, 1fr);
     height: 600px;
     width: 500px;
-    background-color: rgb(0, 0, 0);
+    background-color: $retro-black;
     .playfield {
       display: grid;
       grid-template-columns: repeat(10, 1fr);
       grid-template-rows: repeat(20, 1fr);
       width: 300px;
       height: 600px;
-      background-color: #efeee8;
-      border: 1px solid #382843;
+      background-color: $retro-white;
+      border: 1px solid $retro-black;
     }
     .cell {
       width: 100%;
@@ -40,14 +42,14 @@ body {
     }
 
     .filled {
-      box-shadow: 4px 2px 5px rgb(174, 174, 174);
-      background-color: #06160f;
-      border: 1px solid #efeee8;
+      box-shadow: 4px 2px 5px $retro-gray;
+      background-color: $retro-black;
+      border: 1px solid $retro-white;
     }
     .active {
-      box-shadow: 2px 1px 5px grey;
-      background-color: #535b4e;
-      border: 1px solid #efeee8;
+      box-shadow: 2px 1px 5px $retro-gray;
+      background-color: $retro-gray;
+      border: 1px solid $retro-white;
     }
   }
 }
@@ -57,21 +59,21 @@ body {
   .info {
     display: flex;
     flex-direction: column;
-    background-color: #efeee8;
+    background-color: $retro-white;
     .score {
       margin-left: 20px;
       margin-top: 10px;
       font-size: large;
       font-weight: 900;
-      color: #382843;
+      color: $retro-gray;
       #counter {
-        color: #382843;
+        color: $retro-gray;
         font-size: xx-large;
       }
     }
     #nextContainer {
-      background-color: #efeee8;
-      color: #06160f;
+      background-color: $retro-white;
+      color: $retro-black;
       margin-left: 20px;
       width: 128px;
 
@@ -87,7 +89,7 @@ body {
         flex-direction: column;
         align-items: center;
         width: 160px;
-        border: 1px solid #06160f;
+        border: 1px solid $retro-black;
         margin-bottom: 25px;
         .preview-piece {
           display: grid;
@@ -95,7 +97,7 @@ body {
           grid-auto-rows: 32px;
           justify-content: center;
           padding: 0.25rem;
-          background-color: #efeee8;
+          background-color: $retro-white;
           height: 64px;
           gap: 0px;
           .cell {
@@ -103,7 +105,7 @@ body {
             height: 32px;
             box-sizing: border-box;
             &.filled {
-              background-color: #06160f;
+              background-color: $retro-black;
             }
           }
         }
@@ -116,21 +118,21 @@ body {
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
-    border-top: 2px solid #535b4e;
-    background-color: #efeee8;
+    border-top: 2px solid $retro-gray;
+    background-color: $retro-white;
     button {
-      box-shadow: 2px 1px 5px rgb(171, 171, 171);
+      box-shadow: 2px 1px 5px $retro-gray;
       height: 50px;
       min-width: 150px;
       display: block;
       font-family: "digital";
       font-size: xx-large;
-      background: #efeee8;
-      color: #535b4e;
+      background: $retro-white;
+      color: $retro-gray;
     }
     button:active {
-      background-color: #535b4e;
-      color: #efeee8;
+      background-color: $retro-gray;
+      color: $retro-white;
     }
   }
 }

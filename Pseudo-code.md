@@ -46,8 +46,8 @@ In this game, Tetromino pieces fall from the top of the screen.the player can co
 ### 1. Set Up the Project
 
 - **Initialize HTML structure**: Create a simple HTML page (`index.html`) with a container for the game grid, score, and any necessary UI elements (like a restart button).
-- **Grid Layout**: The game grid will be represented by a matrix (10x20) in JavaScript, but visually, it will be displayed using CSS as a grid with square div elements.
-- **Game Styles**: The styles for the grid, Tetromino shapes, and other UI elements will be written in **SCSS** (or CSS).
+- **Grid Layout**: The game grid will be represented by a matrix (10x20) in TypeScript, but visually, it will be displayed using SCSS as a grid with square div elements.
+- **Game Styles**: The styles for the grid, Tetromino shapes, and other UI elements will be written in **SCSS**.
 - **TypeScript Setup**: The game logic (movement, collision, clearing lines, etc.) will be written in **TypeScript** and linked to the HTML via a script tag.
 
 ---
