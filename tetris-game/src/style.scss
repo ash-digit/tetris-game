@@ -71,6 +71,18 @@ body {
         font-size: xx-large;
       }
     }
+    .speed {
+      margin-left: 20px;
+      margin-top: 10px;
+      margin-bottom: -10;
+      font-size: large;
+      font-weight: 900;
+      color: $retro-gray;
+      #speedometer {
+        color: $retro-gray;
+        font-size: xx-large;
+      }
+    }
     #nextContainer {
       background-color: $retro-white;
       color: $retro-black;
@@ -121,14 +133,15 @@ body {
     border-top: 2px solid $retro-gray;
     background-color: $retro-white;
     button {
-      box-shadow: 2px 1px 5px $retro-gray;
-      height: 50px;
+      box-shadow: 0px 0px 5px $retro-gray;
+      height: 40px;
       min-width: 150px;
       display: block;
       font-family: "digital";
-      font-size: xx-large;
+      font-size: x-large;
       background: $retro-white;
       color: $retro-gray;
+      border: 1px solid $retro-gray;
     }
     button:active {
       background-color: $retro-gray;
