@@ -1,14 +1,15 @@
 import "./style.scss";
 const ROWS = 20;
 const COLS = 10;
-let time = 950;
+let time = 500;
 let score: number = 0;
 let isPaused: boolean = false;
+let speed = 1;
 function createEmptyPlayfield() {
   return Array.from({ length: ROWS }, () => Array(COLS).fill(0));
 }
 let playfield = createEmptyPlayfield();
-
+let intervalId: number | undefined;
 const SHAPES = [
   [[1, 1, 1, 1]], // I
   [
@@ -46,7 +47,29 @@ function fillUpcomingPieces() {
     upcomingPieces.push(shape);
   }
 }
-
+let speedometer = document.querySelector("#speedometer");
+let fasterBtn = document.querySelector("#faster");
+let slowerBtn = document.querySelector("#slower");
+fasterBtn?.addEventListener("click", () => {
+  if (time > 120) {
+    clearInterval(intervalId);
+    time -= 20;
+    speed += 1;
+    speedometer!.innerHTML = " " + speed.toString();
+    console.log("time ---->", time);
+    intervalId = setInterval(update, time);
+  }
+});
+slowerBtn?.addEventListener("click", () => {
+  if (time < 500) {
+    clearInterval(intervalId);
+    time += 20;
+    speed -= 1;
+    speedometer!.innerHTML = " " + speed.toString();
+    console.log("time ---->", time);
+    intervalId = setInterval(update, time);
+  }
+});
 const playfieldDiv = document.querySelector(".playfield")!;
 
 //renderNextPieces will run in generateNewPiece right after fillUpcomingPieces function call
@@ -60,7 +83,6 @@ function renderNextPieces() {
     const preview = document.createElement("div");
     preview.className = "preview-piece";
     const width = shape[0].length;
-    console.log(shape);
     preview.style.gridTemplateColumns = `repeat(${width}, 32px)`;
     shape.forEach((row) => {
       row.forEach((cell) => {
@@ -87,7 +109,6 @@ pauseAndContinue?.addEventListener("click", () => {
 
 let reset = document.getElementById("reset");
 reset?.addEventListener("click", () => {
-  console.log("clicked");
   pauseAndContinue!.innerHTML = "PAUSE";
   restartGame();
 });
@@ -166,7 +187,6 @@ function clearLines(matrix: number[][]) {
       row++; // recheck current row
     }
   }
-  console.log(score);
 }
 function render() {
   playfieldDiv.innerHTML = ""; //wiping the screen clean
@@ -259,5 +279,5 @@ document.addEventListener("keydown", (e) => {
   render(); //after handling the movement, we re-render the  playfieldDiv
 });
 
-setInterval(update, time);
+intervalId = setInterval(update, time);
 render();
