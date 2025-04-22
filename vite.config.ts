@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  base: "/tetris-game/",
+  base: "https://github.com/ash-digit/tetris-game",
 });
