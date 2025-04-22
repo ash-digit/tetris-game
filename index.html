@@ -2,30 +2,44 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=360, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
     <title>Tetris</title>
   </head>
   <body>
-    <div class="container">
-      <div class="playfield"></div>
-      <div class="side">
-        <div class="info">
-          <div class="score">SCORE:<span id="counter"> 0</span></div>
-          <div class="speed">SPEED:<span id="speedometer"> 1</span></div>
-          <div id="nextContainer">
-            <h3>Next:</h3>
-            <div id="nextPieces"></div>
+    <div class="game-wrapper">
+      <div class="container">
+        <div class="playfield"></div>
+        <div class="side">
+          <div class="info">
+            <div class="score">SCORE:<span id="counter"> 0</span></div>
+            <div class="speed">SPEED:<span id="speedometer"> 1</span></div>
+            <div id="nextContainer">
+              <h3>Next:</h3>
+              <div id="nextPieces"></div>
+            </div>
+          </div>
+          <div class="controlers">
+            <button id="pause-continue">Pause</button>
+            <button id="reset">Reset</button>
+            <button id="faster">FASTER</button>
+            <button id="slower">SLOWER</button>
           </div>
         </div>
-        <div class="controlers">
-          <button id="pause-continue">Pause</button>
-          <button id="reset">Reset</button>
-          <button id="faster">FASTER</button>
-          <button id="slower">SLOWER</button>
-        </div>
+      </div>
+      <div id="mobile-controls">
+        <button id="down-btn">▼</button>
+        <button id="rotate-btn">R</button>
+        <button id="left-btn">◀</button>
+        <button id="right-btn">▶</button>
       </div>
     </div>
+    <p id="keyboard-tip" style="display: none">
+      💡 Tip: You can use <strong>A / S / D / W</strong> keys to play!
+    </p>
 
     <script type="module" src="/src/main.ts"></script>
   </body>

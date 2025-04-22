@@ -5,6 +5,7 @@ let time = 500;
 let score: number = 0;
 let isPaused: boolean = false;
 let speed = 1;
+let fastDropInterval: number | null = null;
 function createEmptyPlayfield() {
   return Array.from({ length: ROWS }, () => Array(COLS).fill(0));
 }
@@ -83,7 +84,7 @@ function renderNextPieces() {
     const preview = document.createElement("div");
     preview.className = "preview-piece";
     const width = shape[0].length;
-    preview.style.gridTemplateColumns = `repeat(${width}, 32px)`;
+    preview.style.gridTemplateColumns = `repeat(${width}, 20px)`;
     shape.forEach((row) => {
       row.forEach((cell) => {
         const cellDiv = document.createElement("div");
@@ -161,7 +162,7 @@ function updateScore(score: number) {
   let scoreCounter = document.querySelector("#counter");
   if (!scoreCounter) return;
 
-  scoreCounter.innerHTML = score.toString();
+  scoreCounter.innerHTML = " " + score.toString();
 }
 //lockPiece permanently adds the current falling piece to the playfield
 function lockPiece(piece: typeof currentPiece, matrix: number[][]) {
@@ -255,13 +256,133 @@ function update() {
 
       //again, check if the newly generated piece immediately colides, if yes ====> the game ends
       if (hasCollision(currentPiece, playfield)) {
-        alert("Game Over!");
-        //location.reload();
+        // alert("Game Over!");
+        location.reload();
       }
     }
     render();
   }
 }
+//left-btn
+let leftBtn = document.querySelector("#left-btn");
+let rightBtn = document.querySelector("#right-btn");
+let rotateBtn = document.querySelector("#rotate-btn");
+let downBtn = document.querySelector("#down-btn");
+leftBtn?.addEventListener("touchstart", (e) => {
+  if (!isPaused) {
+    leftBtn.classList.add("touched");
+    e.preventDefault();
+    currentPiece.x--;
+    render();
+    if (hasCollision(currentPiece, playfield)) currentPiece.x++;
+  }
+});
+leftBtn?.addEventListener("touchend", (e) => {
+  if (!isPaused) {
+    leftBtn.classList.remove("touched");
+    e.preventDefault();
+  }
+});
+leftBtn?.addEventListener("mousedown", (e) => {
+  if (!isPaused) {
+    e.preventDefault();
+    currentPiece.x--;
+    render();
+    if (hasCollision(currentPiece, playfield)) currentPiece.x++;
+  }
+});
+
+rightBtn?.addEventListener("touchstart", (e) => {
+  if (!isPaused) {
+    rightBtn.classList.add("touched");
+    e.preventDefault();
+    currentPiece.x++;
+    render();
+    if (hasCollision(currentPiece, playfield)) currentPiece.x--;
+  }
+});
+rightBtn?.addEventListener("touchend", (e) => {
+  if (!isPaused) {
+    rightBtn.classList.remove("touched");
+    e.preventDefault();
+  }
+});
+rightBtn?.addEventListener("mousedown", (e) => {
+  if (!isPaused) {
+    e.preventDefault();
+    currentPiece.x++;
+    render();
+    if (hasCollision(currentPiece, playfield)) currentPiece.x--;
+  }
+});
+
+rotateBtn?.addEventListener("touchstart", (e) => {
+  if (!isPaused) {
+    rotateBtn.classList.add("touched");
+    e.preventDefault();
+    rotatePiece();
+    render();
+  }
+});
+rotateBtn?.addEventListener("touchend", (e) => {
+  if (!isPaused) {
+    rotateBtn.classList.remove("touched");
+    e.preventDefault();
+  }
+});
+
+rotateBtn?.addEventListener("mousedown", (e) => {
+  if (!isPaused) {
+    e.preventDefault();
+    rotatePiece();
+    render();
+  }
+});
+
+downBtn?.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+
+  if (isPaused || fastDropInterval) return;
+  downBtn.classList.add("touched");
+  fastDropInterval = setInterval(() => {
+    currentPiece.y++;
+    render();
+    if (hasCollision(currentPiece, playfield)) {
+      currentPiece.y--;
+      render();
+    } else {
+      render();
+    }
+  }, 50);
+});
+
+downBtn?.addEventListener("touchend", () => {
+  if (fastDropInterval) {
+    downBtn.classList.remove("touched");
+    clearInterval(fastDropInterval);
+    fastDropInterval = null;
+  }
+});
+downBtn?.addEventListener("mousedown", () => {
+  if (isPaused || fastDropInterval) return;
+  fastDropInterval = setInterval(() => {
+    currentPiece.y++;
+    render();
+    if (hasCollision(currentPiece, playfield)) {
+      currentPiece.y--;
+      render();
+    } else {
+      render();
+    }
+  }, 50);
+});
+downBtn?.addEventListener("mouseup", () => {
+  if (fastDropInterval) {
+    clearInterval(fastDropInterval);
+    fastDropInterval = null;
+  }
+});
+
 //listening to the a, s, d, and w keydown events to move the currentPiece around
 document.addEventListener("keydown", (e) => {
   if (e.key === "a" && !isPaused) {
@@ -270,7 +391,12 @@ document.addEventListener("keydown", (e) => {
   } else if (e.key === "d" && !isPaused) {
     currentPiece.x++;
     if (hasCollision(currentPiece, playfield)) currentPiece.x--;
-  } else if (e.key === "s" && !isPaused) {
+  } else if (e.key === "s" && !isPaused && !fastDropInterval) {
+    fastDropInterval = setInterval(() => {
+      currentPiece.y++;
+      if (hasCollision(currentPiece, playfield)) currentPiece.y--;
+      render();
+    }, 50);
     currentPiece.y++;
     if (hasCollision(currentPiece, playfield)) currentPiece.y--;
   } else if (e.key === "w" && !isPaused) {
@@ -278,6 +404,17 @@ document.addEventListener("keydown", (e) => {
   }
   render(); //after handling the movement, we re-render the  playfieldDiv
 });
+document.addEventListener("keyup", (e) => {
+  if (e.key === "s" && !isPaused && fastDropInterval) {
+    clearInterval(fastDropInterval);
+    fastDropInterval = null;
+  }
+});
 
 intervalId = setInterval(update, time);
 render();
+
+const keyboardTip = document.getElementById("keyboard-tip"); //visible hint so desktop users can use their keyboard
+if (window.innerWidth > 768 && keyboardTip) {
+  keyboardTip.style.display = "block";
+}
