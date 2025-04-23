@@ -274,7 +274,10 @@ leftBtn?.addEventListener("touchstart", (e) => {
     e.preventDefault();
     currentPiece.x--;
 
-    if (hasCollision(currentPiece, playfield)) currentPiece.x++;
+    if (hasCollision(currentPiece, playfield)) {
+      currentPiece.x++;
+      return;
+    }
     render();
   }
 });
@@ -289,7 +292,11 @@ leftBtn?.addEventListener("mousedown", (e) => {
     e.preventDefault();
     currentPiece.x--;
 
-    if (hasCollision(currentPiece, playfield)) currentPiece.x++;
+    if (hasCollision(currentPiece, playfield)) {
+      currentPiece.x++;
+      return;
+    }
+
     render();
   }
 });
@@ -299,7 +306,10 @@ rightBtn?.addEventListener("touchstart", (e) => {
     rightBtn.classList.add("touched");
     e.preventDefault();
     currentPiece.x++;
-    if (hasCollision(currentPiece, playfield)) currentPiece.x--;
+    if (hasCollision(currentPiece, playfield)) {
+      currentPiece.x--;
+      return;
+    }
     render();
   }
 });
@@ -313,7 +323,10 @@ rightBtn?.addEventListener("mousedown", (e) => {
   if (!isPaused) {
     e.preventDefault();
     currentPiece.x++;
-    if (hasCollision(currentPiece, playfield)) currentPiece.x--;
+    if (hasCollision(currentPiece, playfield)) {
+      currentPiece.x--;
+      return;
+    }
     render();
   }
 });
