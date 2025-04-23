@@ -273,8 +273,9 @@ leftBtn?.addEventListener("touchstart", (e) => {
     leftBtn.classList.add("touched");
     e.preventDefault();
     currentPiece.x--;
-    render();
+
     if (hasCollision(currentPiece, playfield)) currentPiece.x++;
+    render();
   }
 });
 leftBtn?.addEventListener("touchend", (e) => {
@@ -287,8 +288,9 @@ leftBtn?.addEventListener("mousedown", (e) => {
   if (!isPaused) {
     e.preventDefault();
     currentPiece.x--;
-    render();
+
     if (hasCollision(currentPiece, playfield)) currentPiece.x++;
+    render();
   }
 });
 
@@ -297,8 +299,8 @@ rightBtn?.addEventListener("touchstart", (e) => {
     rightBtn.classList.add("touched");
     e.preventDefault();
     currentPiece.x++;
-    render();
     if (hasCollision(currentPiece, playfield)) currentPiece.x--;
+    render();
   }
 });
 rightBtn?.addEventListener("touchend", (e) => {
@@ -311,8 +313,8 @@ rightBtn?.addEventListener("mousedown", (e) => {
   if (!isPaused) {
     e.preventDefault();
     currentPiece.x++;
-    render();
     if (hasCollision(currentPiece, playfield)) currentPiece.x--;
+    render();
   }
 });
 
@@ -346,7 +348,6 @@ downBtn?.addEventListener("touchstart", (e) => {
   downBtn.classList.add("touched");
   fastDropInterval = setInterval(() => {
     currentPiece.y++;
-    render();
     if (hasCollision(currentPiece, playfield)) {
       currentPiece.y--;
       render();
@@ -367,7 +368,6 @@ downBtn?.addEventListener("mousedown", () => {
   if (isPaused || fastDropInterval) return;
   fastDropInterval = setInterval(() => {
     currentPiece.y++;
-    render();
     if (hasCollision(currentPiece, playfield)) {
       currentPiece.y--;
       render();
