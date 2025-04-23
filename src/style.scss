@@ -43,9 +43,15 @@ body {
     height: 240px;
     border-top: 1px solid $retro-gray;
     button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 2rem;
+      line-height: 1;
+
       width: 70px;
       height: 70px;
-      font-size: 2rem;
       border: none;
       border-radius: 10px;
       background-color: $retro-black;
