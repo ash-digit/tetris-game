@@ -418,3 +418,4 @@ const keyboardTip = document.getElementById("keyboard-tip"); //visible hint so d
 if (window.innerWidth > 768 && keyboardTip) {
   keyboardTip.style.display = "block";
 }
+//adding a comment
