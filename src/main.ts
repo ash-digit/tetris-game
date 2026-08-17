@@ -6,6 +6,25 @@ let score: number = 0;
 let isPaused: boolean = false;
 let speed = 1;
 let fastDropInterval: number | null = null;
+
+type SoundName = "rotate" | "move";
+
+const sounds: Record<SoundName, string> = {
+  rotate: "src/public/audio/move.mp3",
+  move: "src/public/audio/select_008.ogg",
+};
+
+export function playSound(name: SoundName): void {
+  const audio = new Audio(sounds[name]);
+  audio.volume = 0.9;
+  console.log("sound");
+
+  audio
+    .play()
+    .then(() => console.log("Sound started"))
+    .catch((error) => console.error("Sound could not play:", error));
+}
+
 function createEmptyPlayfield() {
   return Array.from({ length: ROWS }, () => Array(COLS).fill(0));
 }
@@ -400,20 +419,25 @@ downBtn?.addEventListener("mouseup", () => {
 document.addEventListener("keydown", (e) => {
   if (e.key === "a" && !isPaused) {
     currentPiece.x--;
+    playSound("move"); //added this recently: needs to be refactored
     if (hasCollision(currentPiece, playfield)) currentPiece.x++;
   } else if (e.key === "d" && !isPaused) {
     currentPiece.x++;
+    playSound("move"); //added this recently: needs to be refactored
     if (hasCollision(currentPiece, playfield)) currentPiece.x--;
   } else if (e.key === "s" && !isPaused && !fastDropInterval) {
     fastDropInterval = setInterval(() => {
       currentPiece.y++;
+      playSound("move"); //added this recently: needs to be refactored
       if (hasCollision(currentPiece, playfield)) currentPiece.y--;
+
       render();
     }, 50);
     currentPiece.y++;
     if (hasCollision(currentPiece, playfield)) currentPiece.y--;
   } else if (e.key === "w" && !isPaused) {
     rotatePiece();
+    playSound("rotate"); //added this recently: needs to be refactored
   }
   render(); //after handling the movement, we re-render the  playfieldDiv
 });
